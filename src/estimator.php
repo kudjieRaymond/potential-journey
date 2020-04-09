@@ -4,7 +4,7 @@ function infectionProjection(int $currentlyInfected, array $data)
 {
 	$timeToElape = normalizeDuration($data["timeToElapse"], $data["periodType"]);
   	
-	return $currentlyInfected * (pow(2 * intdiv($timeToElape, 3)));
+	return $currentlyInfected * (pow(2 , intdiv($timeToElape, 3)));
 }
 
 
@@ -51,9 +51,9 @@ function severeImpactEstimator($data)
 function covid19ImpactEstimator($data)
 {
 
-  return json_encode([
+  return [
 	  "data" => $data,
 	  "impact" => impactEstimator($data),
 	  "severeImpact" => severeImpactEstimator($data)
-  ]);
+  ];
 }
