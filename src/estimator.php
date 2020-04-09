@@ -29,7 +29,7 @@ function impactEstimator($data)
 	
 	return [
 		  "currentlyInfected" => $impact,
-		  "infectionByRequestedTime" => $infectionsByRequestedTime
+		  "infectionsByRequestedTime" => $infectionsByRequestedTime
 	   ];
 }
 
@@ -41,7 +41,7 @@ function severeImpactEstimator($data)
 	
 	return [
 		  "currentlyInfected" => $impact,
-		  "infectionByRequestedTime" => $infectionsByRequestedTime
+		  "infectionsByRequestedTime" => $infectionsByRequestedTime
 	  ];
 }
 
