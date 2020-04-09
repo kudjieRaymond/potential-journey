@@ -21,15 +21,24 @@ function normalizeDuration(int $timeToElapse, String $periodType)
 	
 }
 
+function calcBedAvailability($totalBeds)
+{
+	return (35/100) * $totalBeds;
+}
+
 function impactEstimator($data)
 {
 	$impact = $data["reportedCases"] * 10;
 	
 	$infectionsByRequestedTime = infectionProjection($impact, $data );
+	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
+	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime;
 	
 	return [
 		  "currentlyInfected" => $impact,
-		  "infectionsByRequestedTime" => $infectionsByRequestedTime
+		  "infectionsByRequestedTime" => $infectionsByRequestedTime,
+		  "severeCasesByRequestedTime" => $severeCasesByRequestedTime,
+		  "hospitalBedsByRequestedTime"=> $hospitalBedsByRequestedTime,
 	   ];
 }
 
@@ -38,10 +47,14 @@ function severeImpactEstimator($data)
 	$impact = $data["reportedCases"] * 50;
 
 	$infectionsByRequestedTime = infectionProjection( $impact, $data);
+	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
+	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime;
 	
 	return [
 		  "currentlyInfected" => $impact,
-		  "infectionsByRequestedTime" => $infectionsByRequestedTime
+		  "infectionsByRequestedTime" => $infectionsByRequestedTime,
+		  "severeCasesByRequestedTime" => $severeCasesByRequestedTime,
+		  "hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,
 	  ];
 }
 
