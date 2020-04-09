@@ -23,7 +23,12 @@ function normalizeDuration(int $timeToElapse, String $periodType)
 
 function calcBedAvailability($totalBeds)
 {
-	return (35/100) * $totalBeds;
+	return floor((35/100) * $totalBeds);
+}
+
+function calcNoramlizedAvgIncome($data)
+{
+	return  $data["region"]["avgDailyIncomeInUSD"] * $data["region"]["avgDailyIncomePopulation"] * normalizeDuration($data["timeToElapse"], $data["periodType"]) ;
 }
 
 function impactEstimator($data)
@@ -32,15 +37,22 @@ function impactEstimator($data)
 	
 	$infectionsByRequestedTime = infectionProjection($impact, $data );
 	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
-	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime;
+	$hospitalBedsByRequestedTime = round(calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime, 0, PHP_ROUND_HALF_DOWN);
+	$casesForICUByRequestedTime = $infectionsByRequestedTime * 0.05;
+	$casesForVentilatorsByRequestedTime =  $infectionsByRequestedTime * 0.02;
+	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
 	
 	return [
 		  "currentlyInfected" => $impact,
 		  "infectionsByRequestedTime" => $infectionsByRequestedTime,
 		  "severeCasesByRequestedTime" => $severeCasesByRequestedTime,
 		  "hospitalBedsByRequestedTime"=> $hospitalBedsByRequestedTime,
+		  "casesForICUByRequestedTime" => $casesForICUByRequestedTime,
+		  "casesForVentilatorsByRequestedTime" =>$casesForVentilatorsByRequestedTime,
+		  "dollarsInFlight" =>$dollarsInFlight,
 	   ];
 }
+
 
 function severeImpactEstimator($data)
 {
@@ -48,13 +60,19 @@ function severeImpactEstimator($data)
 
 	$infectionsByRequestedTime = infectionProjection( $impact, $data);
 	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
-	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime;
-	
+	$hospitalBedsByRequestedTime = round(calcBedAvailability($data["totalHospitalBeds"]) - $severeCasesByRequestedTime, 0 , PHP_ROUND_HALF_DOWN);
+	$casesForICUByRequestedTime = $infectionsByRequestedTime * 0.05;
+	$casesForVentilatorsByRequestedTime =  $infectionsByRequestedTime * 0.02;
+	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
+
 	return [
 		  "currentlyInfected" => $impact,
 		  "infectionsByRequestedTime" => $infectionsByRequestedTime,
 		  "severeCasesByRequestedTime" => $severeCasesByRequestedTime,
-		  "hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,
+		  "hospitalBedsByRequestedTime"=> $hospitalBedsByRequestedTime,
+		  "casesForICUByRequestedTime" => $casesForICUByRequestedTime,
+		  "casesForVentilatorsByRequestedTime" => $casesForVentilatorsByRequestedTime,
+		  "dollarsInFlight" => $dollarsInFlight,
 	  ];
 }
 
