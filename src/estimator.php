@@ -28,9 +28,13 @@ function calcBedAvailability($totalBeds, $severity)
 	return (int)$availability;
 }
 
-function calcNoramlizedAvgIncome($data)
+
+function moneyLost($infectionsByRequestedTime, $data)
 {
-	return  $data["region"]["avgDailyIncomeInUSD"] * $data["region"]["avgDailyIncomePopulation"] * normalizeDuration($data["timeToElapse"], $data["periodType"]) ;
+	$days = normalizeDuration($data["timeToElapse"], $data["periodType"]);
+	$normalizedAvgIncome= $data["region"]["avgDailyIncomePopulation"] * $data["region"]["avgDailyIncomeInUSD"] *  $days ;
+
+	return round( $infectionsByRequestedTime * $normalizedAvgIncome , 2);
 }
 
 function impactEstimator($data)
@@ -42,7 +46,7 @@ function impactEstimator($data)
 	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"],  $severeCasesByRequestedTime);
 	$casesForICUByRequestedTime = (int) ($infectionsByRequestedTime * 0.05);
 	$casesForVentilatorsByRequestedTime = (int) ($infectionsByRequestedTime * 0.02);
-	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
+	$dollarsInFlight = moneyLost($infectionsByRequestedTime, $data);
 	
 	return [
 		  "currentlyInfected" => $impact,
@@ -65,7 +69,7 @@ function severeImpactEstimator($data)
 	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"], $severeCasesByRequestedTime);
 	$casesForICUByRequestedTime = (int)($infectionsByRequestedTime * 0.05);
 	$casesForVentilatorsByRequestedTime =  (int)($infectionsByRequestedTime * 0.02);
-	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
+	$dollarsInFlight = moneyLost($infectionsByRequestedTime , $data);
 
 	return [
 		  "currentlyInfected" => $impact,
