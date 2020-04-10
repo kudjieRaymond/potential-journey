@@ -34,7 +34,7 @@ function moneyLost($infectionsByRequestedTime, $data)
 	$days = normalizeDuration($data["timeToElapse"], $data["periodType"]);
 	$avgIncome = $data["region"]["avgDailyIncomePopulation"] * $data["region"]["avgDailyIncomeInUSD"] ;
 
-	return round( ($infectionsByRequestedTime * $avgIncome)/$days , 2);
+	return (int)(($infectionsByRequestedTime * $avgIncome)/$days) ;
 }
 
 function impactEstimator($data)
