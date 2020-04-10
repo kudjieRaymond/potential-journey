@@ -25,7 +25,7 @@ function calcBedAvailability($totalBeds, $severity)
 {
 	$availability = (0.35 * $totalBeds) - $severity ;
 	
-	return round($availability, 0, PHP_ROUND_HALF_DOWN);
+	return (int)$availability;
 }
 
 function calcNoramlizedAvgIncome($data)
