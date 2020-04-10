@@ -32,9 +32,9 @@ function calcBedAvailability($totalBeds, $severity)
 function moneyLost($infectionsByRequestedTime, $data)
 {
 	$days = normalizeDuration($data["timeToElapse"], $data["periodType"]);
-	$normalizedAvgIncome= $data["region"]["avgDailyIncomePopulation"] * $data["region"]["avgDailyIncomeInUSD"] *  $days ;
+	$avgIncome = $data["region"]["avgDailyIncomePopulation"] * $data["region"]["avgDailyIncomeInUSD"] ;
 
-	return round( $infectionsByRequestedTime * $normalizedAvgIncome , 2);
+	return round( ($infectionsByRequestedTime * $avgIncome)/$days , 2);
 }
 
 function impactEstimator($data)
