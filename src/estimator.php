@@ -38,10 +38,10 @@ function impactEstimator($data)
 	$impact = $data["reportedCases"] * 10;
 	
 	$infectionsByRequestedTime = infectionProjection($impact, $data );
-	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
+	$severeCasesByRequestedTime =(int) ($infectionsByRequestedTime * 0.15);
 	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"],  $severeCasesByRequestedTime);
-	$casesForICUByRequestedTime = $infectionsByRequestedTime * 0.05;
-	$casesForVentilatorsByRequestedTime =  $infectionsByRequestedTime * 0.02;
+	$casesForICUByRequestedTime = (int) ($infectionsByRequestedTime * 0.05);
+	$casesForVentilatorsByRequestedTime = (int) ($infectionsByRequestedTime * 0.02);
 	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
 	
 	return [
@@ -61,10 +61,10 @@ function severeImpactEstimator($data)
 	$impact = $data["reportedCases"] * 50;
 
 	$infectionsByRequestedTime = infectionProjection( $impact, $data);
-	$severeCasesByRequestedTime = $infectionsByRequestedTime * 0.15;
+	$severeCasesByRequestedTime = (int)($infectionsByRequestedTime * 0.15);
 	$hospitalBedsByRequestedTime = calcBedAvailability($data["totalHospitalBeds"], $severeCasesByRequestedTime);
-	$casesForICUByRequestedTime = $infectionsByRequestedTime * 0.05;
-	$casesForVentilatorsByRequestedTime =  $infectionsByRequestedTime * 0.02;
+	$casesForICUByRequestedTime = (int)($infectionsByRequestedTime * 0.05);
+	$casesForVentilatorsByRequestedTime =  (int)($infectionsByRequestedTime * 0.02);
 	$dollarsInFlight = round($infectionsByRequestedTime * calcNoramlizedAvgIncome($data), 2);
 
 	return [
