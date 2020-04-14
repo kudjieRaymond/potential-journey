@@ -84,7 +84,6 @@ function severeImpactEstimator($data)
 
 
 
- 
 function covid19ImpactEstimator($data)
 {
 
